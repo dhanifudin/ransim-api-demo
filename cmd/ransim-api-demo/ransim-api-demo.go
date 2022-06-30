@@ -8,6 +8,8 @@ import (
 var log = logging.GetLogger("main")
 
 func main() {
+	log.SetLevel(logging.DebugLevel)
+
 	ready := make(chan bool)
 
 	log.Info("Starting ransim-api-demo")

@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"crypto/tls"
+	"strconv"
 
 	"github.com/onosproject/onos-lib-go/pkg/certs"
 	modelAPI "github.com/onosproject/onos-api/go/onos/ransim/model"
@@ -18,6 +19,8 @@ type UE struct {
 	ID              string  `json:"id"`
 	Latitude        float64 `json:"lat"`
 	Longitude       float64 `json:"lng"`
+	ServingCell     string `json:"serving_cell"`
+	RxPower 	float64 `json:"rx_power"`
 }
 
 type Cell struct {
@@ -88,6 +91,8 @@ func (h *handler) GetUEs(ctx context.Context) ([]UE, error) {
 			ID: ueIdStr,
 			Latitude: ue.Position.Lat, 
 			Longitude: ue.Position.Lng,
+			ServingCell: strconv.FormatUint(uint64(ue.ServingTower), 10),
+			RxPower: ue.ServingTowerStrength,
 		}
 		results = append(results, ueObj)
 	}

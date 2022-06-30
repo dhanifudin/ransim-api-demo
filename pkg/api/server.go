@@ -16,6 +16,8 @@ var log = logging.GetLogger("server")
 
 
 type Api interface {
+	GetUes(ctx *gin.Context)
+	GetCells(ctx *gin.Context)
 	Status(ctx *gin.Context)
 	StartServer()
 }
@@ -43,6 +45,25 @@ func NewOwnApiServer(ransimEndPoint string, servingAddress string) (Api, error) 
 
 }
 
+func (serv *ApiServer) GetUes(c *gin.Context) {
+	ues, err := serv.ransimHandler.GetUEs(c)
+	if err != nil {
+		log.Warn("Something's gone wrong when getting the UEs list by API server [GetUEs()].", err)
+		c.Status(http.StatusNoContent)
+	} else {
+		c.IndentedJSON(http.StatusOK, ues)
+	}	
+}
+
+func (serv *ApiServer) GetCells(c *gin.Context) {
+	cells, err := serv.ransimHandler.GetCells(c)
+	if err != nil {
+		log.Warn("Something's gone wrong when getting the Cells list by API server [GetCells()].", err)
+		c.Status(http.StatusNoContent)
+	} else {
+		c.IndentedJSON(http.StatusOK, cells)
+	}	
+}
 
 func (serv *ApiServer) Status(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, true)
@@ -59,6 +80,8 @@ func (serv *ApiServer) StartServer() {
 		AllowCredentials: true,
 		MaxAge:           12 * time.Hour,
 	}))
+	router.GET("/get/ues", serv.GetUes)
+	router.GET("/get/cells", serv.GetCells)
 	router.GET("/status", serv.Status)
 	router.Run(serv.servingAddress)
 }

@@ -1,0 +1,9 @@
+image:
+  repository: rimedo-labs/ransim-api-demo
+  pullPolicy: IfNotPresent
+  tag: v0.0.1
+
+service:
+  api:
+    port: 8888
+    nodePort: 8888
