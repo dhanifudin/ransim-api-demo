@@ -9,8 +9,13 @@
 		<title>Ransim API</title>
 	</head>
 	<body>
+<<<<<<< HEAD
 		<div id='myDiv'>
             </div>
+=======
+        <div id='status'></div>
+		<div id='myDiv'></div>
+>>>>>>> 94c370406e1b98b0eb41a08ba88fc937e920b9bd
 
 		<script>
             
@@ -20,6 +25,20 @@
             var cells = [];
 
             function getData() {
+                fetch('http://10.0.2.15:8888/status').then(
+                response => {
+                    if (!response.ok) {
+                        throw new Error(`Request failed with status ${reponse.status}`)
+                    }
+                    return response.json()
+                }).then(data => {
+                    document.getElementById('status').innerHTML = "Status: <b>" + data + "</b>";
+                }).catch(error => {
+                    console.log(error);
+                    document.getElementById('status').innerHTML = "Status: false";
+                })
+
+
                 fetch('http://10.0.2.15:8888/get/ues').then(
                 response => {
                     if (!response.ok) {
