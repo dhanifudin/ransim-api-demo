@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "ransim-api-demo.fullname" . }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: {{ template "ransim-api-demo.fullname" . }}
+      app: rimedo
+      type: ransim-api-demo
+      resource: {{ template "ransim-api-demo.fullname" . }}
+  template:
+    metadata:
+      annotations:
+        proxy.onosproject.org/inject: "true"
+      labels:
+        name: {{ template "ransim-api-demo.fullname" . }}
+        app: rimedo
+        type: ransim-api-demo
+        resource: {{ template "ransim-api-demo.fullname" . }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: api
+              containerPort: {{ .Values.service.api.port }}
+          startupProbe:
+            tcpSocket:
+              port: {{ .Values.service.api.port }}
+            periodSeconds: 5
+            failureThreshold: 60
+          readinessProbe:
+            tcpSocket:
+              port: {{ .Values.service.api.port }}
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          livenessProbe:
+            tcpSocket:
+              port: {{ .Values.service.api.port }}
+            initialDelaySeconds: 10
+            periodSeconds: 10

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<script src='https://cdn.plot.ly/plotly-2.12.1.min.js'>
+            </script>
+		<title>Ransim API</title>
+	</head>
+	<body>
+        <div id='status'></div>
+		<div id='myDiv'></div>
+
+		<script>
+            
+            setInterval(getData, 1000);
+
+            var ues = [];
+            var cells = [];
+
+            function getData() {
+                fetch('http://10.0.2.15:8888/status').then(
+                response => {
+                    if (!response.ok) {
+                        throw new Error(`Request failed with status ${reponse.status}`)
+                    }
+                    return response.json()
+                }).then(data => {
+                    document.getElementById('status').innerHTML = "Status: <b>" + data + "</b>";
+                }).catch(error => {
+                    console.log(error);
+                    document.getElementById('status').innerHTML = "Status: false";
+                })
+
+
+                fetch('http://10.0.2.15:8888/get/ues').then(
+                response => {
+                    if (!response.ok) {
+                        throw new Error(`Request failed with status ${reponse.status}`)
+                    }
+                    return response.json()
+                }).then(data => {
+                    console.log(data);
+                    ues = data;
+                }).catch(error => console.log(error))
+
+                fetch('http://10.0.2.15:8888/get/cells').then(
+                response => {
+                    if (!response.ok) {
+                        throw new Error(`Request failed with status ${reponse.status}`)
+                    }
+                    return response.json()
+                }).then(data => {
+                    console.log(data);
+                    cells = data;
+                }).catch(error => console.log(error))
+
+                drawPlot();
+            }
+
+            function drawPlot(){
+                
+                console.log(ues);
+
+                var trace_ues = {
+                    x: [],
+                    y: [],
+                    text: [],
+                    mode: 'markers+text',
+                    textposition: 'bottom center',
+                    marker: { size: 12 },
+                    type: 'scatter',
+                    name: 'UE'
+                };
+
+                var trace_cells = {
+                    x: [],
+                    y: [],
+                    text: [],
+                    mode: 'markers',
+                    marker: { size: 12 },
+                    type: 'scatter',
+                    name: 'Cell'
+                };
+
+                var trace_association = {
+                    x: [],
+                    y: [],
+                    mode: 'lines',
+                    name: 'Association'
+                };
+
+                for (let i = 0; i < ues.length; ++i) {
+                    const element = ues[i];
+                    trace_ues.x.push(element.lng);
+                    trace_ues.y.push(element.lat);
+                    trace_ues.text.push(element.rx_power);
+
+                    for (let k = 0; k < cells.length; ++k) {
+                        if (element.serving_cell == cells[k].id){
+                            trace_association.x.push(element.lng);
+                            trace_association.x.push(cells[k].lng);
+                            trace_association.x.push(null);
+                            trace_association.y.push(element.lat);
+                            trace_association.y.push(cells[k].lat);
+                            trace_association.y.push(null);
+                            break;
+                        }
+                    };
+                };
+
+                for (let k = 0; k < cells.length; ++k) {
+                    const element = cells[k];
+                    trace_cells.x.push(element.lng);
+                    trace_cells.y.push(element.lat);
+                    trace_cells.text.push(k);
+                };
+
+                var data = [trace_ues, trace_cells, trace_association];
+
+                Plotly.newPlot('myDiv', data);
+            }
+        </script>
+	</body>
+</html>

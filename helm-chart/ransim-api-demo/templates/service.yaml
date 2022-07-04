@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "ransim-api-demo.fullname" . }}
+  labels:
+    app: {{ include "ransim-api-demo.fullname" . }}
+spec:
+  type: NodePort
+  ports:
+    - name: api
+      port: {{ .Values.service.api.port }}
+      nodePort: {{ .Values.service.api.nodePort }}
+  selector:
+    name: {{ include "ransim-api-demo.fullname" . }}
