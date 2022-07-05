@@ -113,7 +113,7 @@ func (h *handler) GetCells(ctx context.Context) ([]Cell, error) {
 		cell := receiver.Cell
 		log.Debug(cell)
 		
-		cellIdStr := fmt.Sprintf("%d", cell.NCGI)
+		cellIdStr := fmt.Sprintf("%x", cell.NCGI)
 		cellObj := Cell{
 			ID: cellIdStr,
 			Latitude: cell.Location.Lat, 
