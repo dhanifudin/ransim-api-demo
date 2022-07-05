@@ -91,7 +91,7 @@ func (h *handler) GetUEs(ctx context.Context) ([]UE, error) {
 			ID: ueIdStr,
 			Latitude: ue.Position.Lat, 
 			Longitude: ue.Position.Lng,
-			ServingCell: strconv.FormatUint(uint64(ue.ServingTower), 10),
+			ServingCell: strconv.FormatUint(uint64(ue.ServingTower), 16),
 			RxPower: ue.ServingTowerStrength,
 		}
 		results = append(results, ueObj)
@@ -118,7 +118,7 @@ func (h *handler) GetCells(ctx context.Context) ([]Cell, error) {
 		cell := receiver.Cell
 		log.Debug(cell)
 		
-		cellIdStr := fmt.Sprintf("%d", cell.NCGI)
+		cellIdStr := fmt.Sprintf("%x", cell.NCGI)
 		cellObj := Cell{
 			ID: cellIdStr,
 			Latitude: cell.Location.Lat, 
