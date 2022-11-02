@@ -1,3 +1,10 @@
+// SPDX-FileCopyrightText: 2022-present Intel Corporation
+// SPDX-FileCopyrightText: 2019-present Open Networking Foundation <info@opennetworking.org>
+// SPDX-FileCopyrightText: 2019-present Rimedo Labs
+//
+// SPDX-License-Identifier: Apache-2.0
+// Created by RIMEDO-Labs team
+
 package api
 
 import (
@@ -14,7 +21,6 @@ import (
 
 var log = logging.GetLogger("server")
 
-
 type Api interface {
 	GetUes(ctx *gin.Context)
 	GetCells(ctx *gin.Context)
@@ -23,10 +29,9 @@ type Api interface {
 }
 
 type ApiServer struct {
-	ransimHandler ransim.Handler
+	ransimHandler  ransim.Handler
 	servingAddress string
 }
-
 
 func NewOwnApiServer(ransimEndPoint string, servingAddress string) (Api, error) {
 
@@ -39,7 +44,7 @@ func NewOwnApiServer(ransimEndPoint string, servingAddress string) (Api, error) 
 	}
 
 	return &ApiServer{
-		ransimHandler: ransimHandler,
+		ransimHandler:  ransimHandler,
 		servingAddress: servingAddress,
 	}, nil
 
@@ -52,7 +57,7 @@ func (serv *ApiServer) GetUes(c *gin.Context) {
 		c.Status(http.StatusNoContent)
 	} else {
 		c.IndentedJSON(http.StatusOK, ues)
-	}	
+	}
 }
 
 func (serv *ApiServer) GetCells(c *gin.Context) {
@@ -62,7 +67,7 @@ func (serv *ApiServer) GetCells(c *gin.Context) {
 		c.Status(http.StatusNoContent)
 	} else {
 		c.IndentedJSON(http.StatusOK, cells)
-	}	
+	}
 }
 
 func (serv *ApiServer) Status(c *gin.Context) {

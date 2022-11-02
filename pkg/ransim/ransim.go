@@ -1,13 +1,21 @@
+// SPDX-FileCopyrightText: 2022-present Intel Corporation
+// SPDX-FileCopyrightText: 2019-present Open Networking Foundation <info@opennetworking.org>
+// SPDX-FileCopyrightText: 2019-present Rimedo Labs
+//
+// SPDX-License-Identifier: Apache-2.0
+// Created by RIMEDO-Labs team
+// Based on work of Open Networking Foundation team
+
 package ransim
 
 import (
 	"context"
-	"fmt"
 	"crypto/tls"
+	"fmt"
 	"strconv"
 
-	"github.com/onosproject/onos-lib-go/pkg/certs"
 	modelAPI "github.com/onosproject/onos-api/go/onos/ransim/model"
+	"github.com/onosproject/onos-lib-go/pkg/certs"
 	"github.com/onosproject/onos-lib-go/pkg/logging"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
@@ -16,11 +24,12 @@ import (
 var log = logging.GetLogger("ransim")
 
 type UE struct {
-	ID              string  `json:"id"`
-	Latitude        float64 `json:"lat"`
-	Longitude       float64 `json:"lng"`
-	ServingCell     string `json:"serving_cell"`
-	RxPower 	float64 `json:"rx_power"`
+	ID          string  `json:"id"`
+	Latitude    float64 `json:"lat"`
+	Longitude   float64 `json:"lng"`
+	ServingCell string  `json:"serving_cell"`
+	RxPower     float64 `json:"rx_power"`
+	FiveQi      int32   `json:"five_qi"`
 }
 
 type Cell struct {
@@ -28,7 +37,6 @@ type Cell struct {
 	Latitude  float64 `json:"lat"`
 	Longitude float64 `json:"lng"`
 }
-
 
 func NewHandler(endpoint string) (Handler, error) {
 
@@ -86,13 +94,20 @@ func (h *handler) GetUEs(ctx context.Context) ([]UE, error) {
 		ue := receiver.Ue
 		log.Debug(ue)
 
-		ueIdStr := fmt.Sprintf("%d", ue.IMSI)
+		var fiveQi int32
+		if ue.FiveQi > 127 {
+			fiveQi = 2
+		} else {
+			fiveQi = 1
+		}
+		ueIdStr := fmt.Sprintf("%d", ue.Ueid.AmfUeNgapId)
 		ueObj := UE{
-			ID: ueIdStr,
-			Latitude: ue.Position.Lat, 
-			Longitude: ue.Position.Lng,
+			ID:          ueIdStr,
+			Latitude:    ue.Position.Lat,
+			Longitude:   ue.Position.Lng,
 			ServingCell: strconv.FormatUint(uint64(ue.ServingTower), 16),
-			RxPower: ue.ServingTowerStrength,
+			RxPower:     ue.ServingTowerStrength,
+			FiveQi:      fiveQi,
 		}
 		results = append(results, ueObj)
 	}
@@ -117,11 +132,11 @@ func (h *handler) GetCells(ctx context.Context) ([]Cell, error) {
 
 		cell := receiver.Cell
 		log.Debug(cell)
-		
+
 		cellIdStr := fmt.Sprintf("%x", cell.NCGI)
 		cellObj := Cell{
-			ID: cellIdStr,
-			Latitude: cell.Location.Lat, 
+			ID:        cellIdStr,
+			Latitude:  cell.Location.Lat,
 			Longitude: cell.Location.Lng,
 		}
 		results = append(results, cellObj)
@@ -130,4 +145,3 @@ func (h *handler) GetCells(ctx context.Context) ([]Cell, error) {
 
 	return results, nil
 }
-
