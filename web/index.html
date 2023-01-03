@@ -13,17 +13,17 @@
 		<div id='myDiv'></div>
 
 		<script>
-            
+
             setInterval(getData, 1000);
 
             var ues = [];
             var cells = [];
 
             function getData() {
-                fetch('http://10.0.2.15:8888/status').then(
+                fetch('https://ransim-api-demo.loca.lt/status').then(
                 response => {
                     if (!response.ok) {
-                        throw new Error(`Request failed with status ${reponse.status}`)
+                        throw new Error(`Request failed with status ${response.status}`)
                     }
                     return response.json()
                 }).then(data => {
@@ -34,10 +34,10 @@
                 })
 
 
-                fetch('http://10.0.2.15:8888/get/ues').then(
+                fetch('https://ransim-api-demo.loca.lt/get/ues').then(
                 response => {
                     if (!response.ok) {
-                        throw new Error(`Request failed with status ${reponse.status}`)
+                        throw new Error(`Request failed with status ${response.status}`)
                     }
                     return response.json()
                 }).then(data => {
@@ -45,10 +45,10 @@
                     ues = data;
                 }).catch(error => console.log(error))
 
-                fetch('http://10.0.2.15:8888/get/cells').then(
+                fetch('https://ransim-api-demo.loca.lt/get/cells').then(
                 response => {
                     if (!response.ok) {
-                        throw new Error(`Request failed with status ${reponse.status}`)
+                        throw new Error(`Request failed with status ${response.status}`)
                     }
                     return response.json()
                 }).then(data => {
@@ -60,7 +60,7 @@
             }
 
             function drawPlot(){
-                
+
                 console.log(ues);
 
                 var trace_ues = {
