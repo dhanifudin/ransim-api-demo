@@ -11,7 +11,8 @@ include ./build/build-tools/make/onf-common.mk
 
 docker:
 	@go mod vendor
-	sudo docker build --network host -f build/Dockerfile -t rimedo-labs/$(XAPPNAME):$(VERSION) . 
+	docker build --network host -f build/Dockerfile -t dhanifudin/$(XAPPNAME):$(VERSION) .
+	docker push dhanifudin/$(XAPPNAME):$(VERSION)
 	@rm -rf vendor
 
 install-xapp:
@@ -20,4 +21,4 @@ install-xapp:
 delete-xapp:
 	-helm uninstall -n riab $(XAPPNAME)
 
-dev: delete-xapp docker install-xapp 
+dev: delete-xapp docker install-xapp

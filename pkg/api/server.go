@@ -14,7 +14,6 @@ import (
 
 var log = logging.GetLogger("server")
 
-
 type Api interface {
 	GetUes(ctx *gin.Context)
 	GetCells(ctx *gin.Context)
@@ -23,10 +22,9 @@ type Api interface {
 }
 
 type ApiServer struct {
-	ransimHandler ransim.Handler
+	ransimHandler  ransim.Handler
 	servingAddress string
 }
-
 
 func NewOwnApiServer(ransimEndPoint string, servingAddress string) (Api, error) {
 
@@ -39,7 +37,7 @@ func NewOwnApiServer(ransimEndPoint string, servingAddress string) (Api, error) 
 	}
 
 	return &ApiServer{
-		ransimHandler: ransimHandler,
+		ransimHandler:  ransimHandler,
 		servingAddress: servingAddress,
 	}, nil
 
@@ -52,7 +50,7 @@ func (serv *ApiServer) GetUes(c *gin.Context) {
 		c.Status(http.StatusNoContent)
 	} else {
 		c.IndentedJSON(http.StatusOK, ues)
-	}	
+	}
 }
 
 func (serv *ApiServer) GetCells(c *gin.Context) {
@@ -62,7 +60,7 @@ func (serv *ApiServer) GetCells(c *gin.Context) {
 		c.Status(http.StatusNoContent)
 	} else {
 		c.IndentedJSON(http.StatusOK, cells)
-	}	
+	}
 }
 
 func (serv *ApiServer) Status(c *gin.Context) {
@@ -80,6 +78,7 @@ func (serv *ApiServer) StartServer() {
 		AllowCredentials: true,
 		MaxAge:           12 * time.Hour,
 	}))
+	router.RemoveExtraSlash = true
 	router.GET("/get/ues", serv.GetUes)
 	router.GET("/get/cells", serv.GetCells)
 	router.GET("/status", serv.Status)

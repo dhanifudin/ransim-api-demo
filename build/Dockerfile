@@ -12,7 +12,7 @@ COPY build/build-tools /go/src/github.com/rimedo-labs/ransim-api-demo/build/buil
 RUN cd /go/src/github.com/rimedo-labs/ransim-api-demo && GOFLAGS=-mod=vendor make build
 
 FROM alpine:3.11
-RUN apk add libc6-compat
+RUN apk add libc6-compat curl
 
 USER nobody
 

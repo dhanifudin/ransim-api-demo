@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/onosproject/onos-lib-go/pkg/logging"
 	"github.com/RIMEDO-Labs/ransim-api-demo/pkg/manager"
+	"github.com/onosproject/onos-lib-go/pkg/logging"
 )
 
 var log = logging.GetLogger("main")
@@ -15,11 +15,11 @@ func main() {
 	log.Info("Starting ransim-api-demo")
 
 	cfg := manager.Config{
-		AppID:            "ransim-api-demo",
-		RansimAddress:    "ran-simulator",
-		RansimPort:       5150,
-		ApiServingAddress:    "",
-		ApiServingPort:       8888,
+		AppID:             "ransim-api-demo",
+		RansimAddress:     "ran-simulator",
+		RansimPort:        5150,
+		ApiServingAddress: "127.0.0.1",
+		ApiServingPort:    8888,
 	}
 
 	mgr := manager.NewManager(cfg)
