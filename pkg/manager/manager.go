@@ -4,12 +4,11 @@ import (
 	"fmt"
 	"strconv"
 
+	"github.com/dhanifudin/ransim-api-demo/pkg/api"
 	"github.com/onosproject/onos-lib-go/pkg/logging"
-	"github.com/RIMEDO-Labs/ransim-api-demo/pkg/api"
 )
 
 var log = logging.GetLogger("manager")
-
 
 type Config struct {
 	AppID             string

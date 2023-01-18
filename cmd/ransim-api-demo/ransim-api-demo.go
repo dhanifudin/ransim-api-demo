@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/RIMEDO-Labs/ransim-api-demo/pkg/manager"
+	"github.com/dhanifudin/ransim-api-demo/pkg/manager"
 	"github.com/onosproject/onos-lib-go/pkg/logging"
 )
 

@@ -2,12 +2,12 @@ package ransim
 
 import (
 	"context"
-	"fmt"
 	"crypto/tls"
+	"fmt"
 	"strconv"
 
-	"github.com/onosproject/onos-lib-go/pkg/certs"
 	modelAPI "github.com/onosproject/onos-api/go/onos/ransim/model"
+	"github.com/onosproject/onos-lib-go/pkg/certs"
 	"github.com/onosproject/onos-lib-go/pkg/logging"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
@@ -16,11 +16,11 @@ import (
 var log = logging.GetLogger("ransim")
 
 type UE struct {
-	ID              string  `json:"id"`
-	Latitude        float64 `json:"lat"`
-	Longitude       float64 `json:"lng"`
-	ServingCell     string `json:"serving_cell"`
-	RxPower 	float64 `json:"rx_power"`
+	ID          string  `json:"id"`
+	Latitude    float64 `json:"lat"`
+	Longitude   float64 `json:"lng"`
+	ServingCell string  `json:"serving_cell"`
+	RxPower     float64 `json:"rx_power"`
 }
 
 type Cell struct {
@@ -28,7 +28,6 @@ type Cell struct {
 	Latitude  float64 `json:"lat"`
 	Longitude float64 `json:"lng"`
 }
-
 
 func NewHandler(endpoint string) (Handler, error) {
 
@@ -88,11 +87,11 @@ func (h *handler) GetUEs(ctx context.Context) ([]UE, error) {
 
 		ueIdStr := fmt.Sprintf("%d", ue.IMSI)
 		ueObj := UE{
-			ID: ueIdStr,
-			Latitude: ue.Position.Lat, 
-			Longitude: ue.Position.Lng,
+			ID:          ueIdStr,
+			Latitude:    ue.Position.Lat,
+			Longitude:   ue.Position.Lng,
 			ServingCell: strconv.FormatUint(uint64(ue.ServingTower), 16),
-			RxPower: ue.ServingTowerStrength,
+			RxPower:     ue.ServingTowerStrength,
 		}
 		results = append(results, ueObj)
 	}
@@ -117,11 +116,11 @@ func (h *handler) GetCells(ctx context.Context) ([]Cell, error) {
 
 		cell := receiver.Cell
 		log.Debug(cell)
-		
+
 		cellIdStr := fmt.Sprintf("%x", cell.NCGI)
 		cellObj := Cell{
-			ID: cellIdStr,
-			Latitude: cell.Location.Lat, 
+			ID:        cellIdStr,
+			Latitude:  cell.Location.Lat,
 			Longitude: cell.Location.Lng,
 		}
 		results = append(results, cellObj)
@@ -130,4 +129,3 @@ func (h *handler) GetCells(ctx context.Context) ([]Cell, error) {
 
 	return results, nil
 }
-
