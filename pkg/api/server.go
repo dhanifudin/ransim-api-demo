@@ -150,6 +150,7 @@ func headersMiddleware() gin.HandlerFunc {
 		ctx.Writer.Header().Set("Cache-Control", "no-cache")
 		ctx.Writer.Header().Set("Connection", "keep-alive")
 		ctx.Writer.Header().Set("Transfer-Encoding", "chunked")
+		ctx.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 		ctx.Next()
 	}
 }
