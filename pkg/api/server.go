@@ -7,6 +7,7 @@ import (
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	"golang.org/x/net/context"
 
 	"github.com/dhanifudin/ransim-api-demo/pkg/ransim"
 
@@ -19,7 +20,7 @@ type Api interface {
 	GetUes(ctx *gin.Context)
 	GetCells(ctx *gin.Context)
 	Status(ctx *gin.Context)
-	StartServer(ctx *gin.Context)
+	StartServer()
 }
 
 type ApiServer struct {
@@ -153,13 +154,13 @@ func headersMiddleware() gin.HandlerFunc {
 	}
 }
 
-func (serv *ApiServer) StartServer(c *gin.Context) {
+func (serv *ApiServer) StartServer() {
 	ueStream := NewUeEvent()
 
 	go func() {
 		for {
 			time.Sleep(time.Second * 1)
-			ues, err := serv.ransimHandler.GetUEs(c)
+			ues, err := serv.ransimHandler.GetUEs(context.Background())
 			if err != nil {
 				ueStream.Message <- ues
 			}
