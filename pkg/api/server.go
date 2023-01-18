@@ -162,7 +162,7 @@ func (serv *ApiServer) StartServer() {
 		for {
 			time.Sleep(time.Second * 1)
 			ues, err := serv.ransimHandler.GetUEs(context.Background())
-			if err != nil {
+			if err == nil {
 				ueStream.Message <- ues
 			}
 		}
